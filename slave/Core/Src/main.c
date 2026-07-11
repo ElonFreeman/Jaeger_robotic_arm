@@ -18,6 +18,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "spi.h"
 #include "usart.h"
 #include "gpio.h"
 
@@ -44,8 +45,10 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-char transmit_buff[]="hi_master!this is slave.";
-char recieve_buff[100];
+char position_pack[5]="";
+char command_actuate[15]="#000P0500T0000!";
+char command_get_position[9]="#000PRAD!";
+char receive_position[11]="";
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -90,18 +93,27 @@ int main(void)
   MX_GPIO_Init();
   MX_UART4_Init();
   MX_USART1_UART_Init();
-  MX_USART3_UART_Init();
+  MX_SPI3_Init();
   /* USER CODE BEGIN 2 */
-
+  int i=0;
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    HAL_UART_Receive(&huart3,(uint8_t*)recieve_buff,sizeof(recieve_buff),10);
-    printf("%s\r\n",recieve_buff);
-    HAL_UART_Transmit(&huart3,(uint8_t*)transmit_buff,sizeof(transmit_buff),10);
+    HAL_SPI_Receive(&hspi3,(uint8_t*)position_pack,sizeof(position_pack),HAL_MAX_DELAY);
+    command_actuate[3]=position_pack[0]; 
+    for(uint8_t i=5,j=1;i<9;i++,j++) {command_actuate[i]=position_pack[j];}
+    HAL_UART_Transmit(&huart4,(uint8_t*)command_actuate,sizeof(command_actuate),5);
+
+    //HAL_UART_Transmit(&huart4,(uint8_t*)command_get_position,sizeof(command_get_position),1);
+    //HAL_UART_Receive(&huart4,(uint8_t*)receive_position,sizeof(receive_position),4);
+    printf("slave:%s\r\n",position_pack);
+    //printf(" %c%c%c%c%c\r\n",receive_position[3],receive_position[5],receive_position[6],receive_position[7],receive_position[8]);
+    i++;
+    if(i%6==0)
+    {printf("\033[6A");}
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
