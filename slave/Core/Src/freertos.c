@@ -195,7 +195,7 @@ void Start_Actuation(void *argument)
     osThreadFlagsWait(0x01, osFlagsWaitAny, osWaitForever);
     HAL_GPIO_WritePin(GPIOB,GPIO_PIN_8,GPIO_PIN_RESET);
 
-    HAL_SPI_Receive(&hspi3,(uint8_t*)position_pack,sizeof(position_pack),HAL_MAX_DELAY);
+    HAL_SPI_Receive(&hspi3,(uint8_t*)position_pack,sizeof(position_pack),2);
     //Anti Lock Rotor
     if(position_pack[0]=='5')
     {
@@ -215,10 +215,11 @@ void Start_Actuation(void *argument)
     HAL_UART_Transmit(&huart4,(uint8_t*)command_actuate,sizeof(command_actuate),5);
     counter++;
     
-    HAL_GPIO_WritePin(GPIOB,GPIO_PIN_8,GPIO_PIN_SET);
+    osThreadFlagsSet(FeedBackHandle, 0x02);
     osThreadFlagsClear(0x01);
 
-    osDelay(1);
+    HAL_GPIO_WritePin(GPIOB,GPIO_PIN_8,GPIO_PIN_SET);
+    //osDelay(1);
   }
   
   /* USER CODE END Start_Actuation */
@@ -239,20 +240,22 @@ void Start_SerialPrint(void *argument)
   for(;;)
   {
     HAL_GPIO_WritePin(GPIOB,GPIO_PIN_9,GPIO_PIN_RESET);
+    
     //调试打印
-    // if (xQueueReceive(slave_tasksHandle, &receive, portMAX_DELAY) == pdPASS)
-    // {
+    if (xQueueReceive(slave_tasksHandle, &receive, portMAX_DELAY) == pdPASS)
+    {
           
-    //   printf("slave:%s\r\n",receive.position_pack);
-    //   printf(" %c%c%c%c%c\r\n",receive.receive_position[3],receive.receive_position[5],
-    //     receive.receive_position[6],receive.receive_position[7],receive.receive_position[8]);
+      //printf("slave:%s\r\n",position_pack);
+      printf(" %c%c%c%c%c\r\n",receive.receive_position[3],receive.receive_position[5],
+        receive.receive_position[6],receive.receive_position[7],receive.receive_position[8]);
 
-    //   if(counter%6==0)
-    //   {printf("\033[6A"); counter=0;}
-    // }
+      if(counter%6==0)
+      {printf("\033[6A"); counter=0;}
+    }
 
+    
     HAL_GPIO_WritePin(GPIOB,GPIO_PIN_9,GPIO_PIN_SET);
-    osDelay(1);
+    //osDelay(1);
   }
   
   /* USER CODE END Start_SerialPrint */
@@ -272,17 +275,20 @@ void Start_FeedBack(void *argument)
   /* Infinite loop */
   for(;;)
   {
+    osThreadFlagsWait(0x02, osFlagsWaitAny, osWaitForever);
     HAL_GPIO_WritePin(GPIOB,GPIO_PIN_7,GPIO_PIN_RESET);
 
-    // HAL_UART_Transmit(&huart4,(uint8_t*)command_get_position,sizeof(command_get_position),1);
-    // HAL_UART_Receive(&huart4,(uint8_t*)receive_position,sizeof(receive_position),3);
+    HAL_UART_Transmit(&huart4,(uint8_t*)command_get_position,sizeof(command_get_position),1);
+    HAL_UART_Receive(&huart4,(uint8_t*)receive_position,sizeof(receive_position),3);
 
-    // memcpy(&send.receive_position[0],&receive_position[3],1);
-    // memcpy(&send.receive_position[1],&receive_position[5],4);
-    // xQueueSend(slave_tasksHandle, &send, 0);
+    memcpy(&send.receive_position[0],&receive_position[3],1);
+    memcpy(&send.receive_position[1],&receive_position[5],4);
+    xQueueSend(slave_tasksHandle, &send, 0);
     
+    
+    osThreadFlagsClear(0x02);
     HAL_GPIO_WritePin(GPIOB,GPIO_PIN_7,GPIO_PIN_SET);
-    osDelay(1);
+    //osDelay(1);
   }
   /* USER CODE END Start_FeedBack */
 }
