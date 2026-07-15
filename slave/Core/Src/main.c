@@ -18,13 +18,14 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "cmsis_os.h"
 #include "spi.h"
 #include "usart.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "stdio.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -45,14 +46,12 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-char position_pack[5]="";
-char command_actuate[15]="#000P0500T0000!";
-char command_get_position[9]="#000PRAD!";
-char receive_position[11]="";
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
+void MX_FREERTOS_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -95,25 +94,22 @@ int main(void)
   MX_USART1_UART_Init();
   MX_SPI3_Init();
   /* USER CODE BEGIN 2 */
-  int i=0;
+
   /* USER CODE END 2 */
+
+  /* Init scheduler */
+  osKernelInitialize();  /* Call init function for freertos objects (in cmsis_os2.c) */
+  MX_FREERTOS_Init();
+
+  /* Start scheduler */
+  osKernelStart();
+
+  /* We should never get here as control is now taken by the scheduler */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    HAL_SPI_Receive(&hspi3,(uint8_t*)position_pack,sizeof(position_pack),HAL_MAX_DELAY);
-    command_actuate[3]=position_pack[0]; 
-    for(uint8_t i=5,j=1;i<9;i++,j++) {command_actuate[i]=position_pack[j];}
-    HAL_UART_Transmit(&huart4,(uint8_t*)command_actuate,sizeof(command_actuate),5);
-
-    //HAL_UART_Transmit(&huart4,(uint8_t*)command_get_position,sizeof(command_get_position),1);
-    //HAL_UART_Receive(&huart4,(uint8_t*)receive_position,sizeof(receive_position),4);
-    printf("slave:%s\r\n",position_pack);
-    //printf(" %c%c%c%c%c\r\n",receive_position[3],receive_position[5],receive_position[6],receive_position[7],receive_position[8]);
-    i++;
-    if(i%6==0)
-    {printf("\033[6A");}
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -163,13 +159,8 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
-int _write(int file,char *ptr,int len)
-{
-  if(HAL_UART_Transmit(&huart1,(uint8_t*)ptr,len,HAL_MAX_DELAY)!=HAL_OK)
-  {return -1;}
-  
-  return len;
-}
+/* USER CODE BEGIN 4 */
+
 /* USER CODE END 4 */
 
 /**

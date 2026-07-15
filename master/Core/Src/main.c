@@ -21,7 +21,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include<stdio.h>
+#include "stdio.h"
+#include "string.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -48,7 +49,7 @@ UART_HandleTypeDef huart1;
 /* USER CODE BEGIN PV */
 char release_torque[9]="#255PULK!";
 char command_get_position[9]="#000PRAD!";
-char recieve_position[11]="";
+char receive_position[11]="";
 char transmit_position[5]="";
 //char command_temp_volt[9]="";
 /* USER CODE END PV */
@@ -60,7 +61,20 @@ static void MX_UART4_Init(void);
 static void MX_USART1_UART_Init(void);
 static void MX_SPI3_Init(void);
 /* USER CODE BEGIN PFP */
+void DWT_Delay_Init(void) {
+    CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
+    DWT->CYCCNT = 0;
+    DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
+}
 
+// 纯硬件微秒延时函数
+void delay_us(uint32_t us) {
+    uint32_t startTick = DWT->CYCCNT;
+    // 根据主频计算需要的时钟周期数
+    uint32_t delayTicks = us * (SystemCoreClock / 1000000); 
+
+    while ((DWT->CYCCNT - startTick) < delayTicks);
+}
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -92,7 +106,7 @@ int main(void)
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
-
+  DWT_Delay_Init();
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
@@ -112,10 +126,15 @@ int main(void)
     {
       command_get_position[3]=i+'0'; transmit_position[0]=i+'0';
       HAL_UART_Transmit(&huart4,(uint8_t*)command_get_position,sizeof(command_get_position),1);
-      HAL_UART_Receive(&huart4,(uint8_t*)recieve_position,sizeof(recieve_position),4);
-      for(uint8_t i=1,j=5;i<5;i++,j++) {transmit_position[i]=recieve_position[j];}
+      HAL_UART_Receive(&huart4,(uint8_t*)receive_position,sizeof(receive_position),4);
+      //for(uint8_t i=1,j=5;i<5;i++,j++) {transmit_position[i]=receive_position[j];}
+      memcpy(&transmit_position[1],&receive_position[5],4);
+      
+      HAL_GPIO_WritePin(GPIOB,GPIO_PIN_0,GPIO_PIN_SET);
+      delay_us(100);
       HAL_SPI_Transmit(&hspi3,(uint8_t*)transmit_position,sizeof(transmit_position),HAL_MAX_DELAY);
-      //HAL_UART_Transmit(&huart4,(uint8_t*)command_temp_volt,sizeof(command_temp_volt),3);
+      HAL_GPIO_WritePin(GPIOB,GPIO_PIN_0,GPIO_PIN_RESET);
+
       printf("master:%s\r\n",transmit_position);
     }
     printf("\033[6A");
@@ -191,7 +210,7 @@ static void MX_SPI3_Init(void)
   hspi3.Init.DataSize = SPI_DATASIZE_8BIT;
   hspi3.Init.CLKPolarity = SPI_POLARITY_LOW;
   hspi3.Init.CLKPhase = SPI_PHASE_1EDGE;
-  hspi3.Init.NSS = SPI_NSS_HARD_OUTPUT;
+  hspi3.Init.NSS = SPI_NSS_SOFT;
   hspi3.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_128;
   hspi3.Init.FirstBit = SPI_FIRSTBIT_MSB;
   hspi3.Init.TIMode = SPI_TIMODE_DISABLE;
@@ -280,14 +299,25 @@ static void MX_USART1_UART_Init(void)
   */
 static void MX_GPIO_Init(void)
 {
+  GPIO_InitTypeDef GPIO_InitStruct = {0};
   /* USER CODE BEGIN MX_GPIO_Init_1 */
 
   /* USER CODE END MX_GPIO_Init_1 */
 
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOA_CLK_ENABLE();
-  __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
+  __HAL_RCC_GPIOC_CLK_ENABLE();
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin : PB0 */
+  GPIO_InitStruct.Pin = GPIO_PIN_0;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /* USER CODE BEGIN MX_GPIO_Init_2 */
 
