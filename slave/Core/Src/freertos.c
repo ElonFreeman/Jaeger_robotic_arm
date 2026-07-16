@@ -58,6 +58,7 @@ char position_pack[5]="";
 char command_actuate[15]="#000P0500T0000!";
 char command_get_position[9]="#000PRAD!";
 char receive_position[11]="";
+char num_joint;
 uint8_t counter=0;
 int anti_locked=0;
 /* USER CODE END Variables */
@@ -74,13 +75,6 @@ const osThreadAttr_t Actuation_attributes = {
   .name = "Actuation",
   .stack_size = 256 * 4,
   .priority = (osPriority_t) osPriorityHigh,
-};
-/* Definitions for SerialPrint */
-osThreadId_t SerialPrintHandle;
-const osThreadAttr_t SerialPrint_attributes = {
-  .name = "SerialPrint",
-  .stack_size = 512 * 4,
-  .priority = (osPriority_t) osPriorityLow,
 };
 /* Definitions for FeedBack */
 osThreadId_t FeedBackHandle;
@@ -102,7 +96,6 @@ const osMessageQueueAttr_t slave_tasks_attributes = {
 
 void StartDefaultTask(void *argument);
 void Start_Actuation(void *argument);
-void Start_SerialPrint(void *argument);
 void Start_FeedBack(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
@@ -144,9 +137,6 @@ void MX_FREERTOS_Init(void) {
   /* creation of Actuation */
   ActuationHandle = osThreadNew(Start_Actuation, NULL, &Actuation_attributes);
 
-  /* creation of SerialPrint */
-  SerialPrintHandle = osThreadNew(Start_SerialPrint, NULL, &SerialPrint_attributes);
-
   /* creation of FeedBack */
   FeedBackHandle = osThreadNew(Start_FeedBack, NULL, &FeedBack_attributes);
 
@@ -173,7 +163,7 @@ void StartDefaultTask(void *argument)
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1);
+    //osDelay(1);
   }
   /* USER CODE END StartDefaultTask */
 }
@@ -213,7 +203,7 @@ void Start_Actuation(void *argument)
     //*(uint32_t*)&command_actuate[5] = *(uint32_t*)&position_pack[1];
     
     HAL_UART_Transmit(&huart4,(uint8_t*)command_actuate,sizeof(command_actuate),5);
-    counter++;
+    num_joint=position_pack[0]; counter++;
     
     osThreadFlagsSet(FeedBackHandle, 0x02);
     osThreadFlagsClear(0x01);
@@ -223,42 +213,6 @@ void Start_Actuation(void *argument)
   }
   
   /* USER CODE END Start_Actuation */
-}
-
-/* USER CODE BEGIN Header_Start_SerialPrint */
-/**
-* @brief Function implementing the SerialPrint thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_Start_SerialPrint */
-void Start_SerialPrint(void *argument)
-{
-  /* USER CODE BEGIN Start_SerialPrint */
-  struct serial_print_pack receive;
-  /* Infinite loop */
-  for(;;)
-  {
-    HAL_GPIO_WritePin(GPIOB,GPIO_PIN_9,GPIO_PIN_RESET);
-    
-    //调试打印
-    if (xQueueReceive(slave_tasksHandle, &receive, portMAX_DELAY) == pdPASS)
-    {
-          
-      //printf("slave:%s\r\n",position_pack);
-      printf(" %c%c%c%c%c\r\n",receive.receive_position[3],receive.receive_position[5],
-        receive.receive_position[6],receive.receive_position[7],receive.receive_position[8]);
-
-      if(counter%6==0)
-      {printf("\033[6A"); counter=0;}
-    }
-
-    
-    HAL_GPIO_WritePin(GPIOB,GPIO_PIN_9,GPIO_PIN_SET);
-    //osDelay(1);
-  }
-  
-  /* USER CODE END Start_SerialPrint */
 }
 
 /* USER CODE BEGIN Header_Start_FeedBack */
@@ -271,20 +225,22 @@ void Start_SerialPrint(void *argument)
 void Start_FeedBack(void *argument)
 {
   /* USER CODE BEGIN Start_FeedBack */
-  struct serial_print_pack send;
+  
   /* Infinite loop */
   for(;;)
   {
     osThreadFlagsWait(0x02, osFlagsWaitAny, osWaitForever);
     HAL_GPIO_WritePin(GPIOB,GPIO_PIN_7,GPIO_PIN_RESET);
 
+    command_get_position[3]=num_joint;
     HAL_UART_Transmit(&huart4,(uint8_t*)command_get_position,sizeof(command_get_position),1);
     HAL_UART_Receive(&huart4,(uint8_t*)receive_position,sizeof(receive_position),3);
 
-    memcpy(&send.receive_position[0],&receive_position[3],1);
-    memcpy(&send.receive_position[1],&receive_position[5],4);
-    xQueueSend(slave_tasksHandle, &send, 0);
-    
+    printf("%c%c%c%c%c\r\n",receive_position[3],receive_position[5],receive_position[6],receive_position[7],receive_position[8]);
+    if(counter>5)
+    {
+      printf("\033[6A"); counter=0;
+    }
     
     osThreadFlagsClear(0x02);
     HAL_GPIO_WritePin(GPIOB,GPIO_PIN_7,GPIO_PIN_SET);
@@ -297,7 +253,7 @@ void Start_FeedBack(void *argument)
 /* USER CODE BEGIN Application */
 int _write(int file,char *ptr,int len)
 {
-  if(HAL_UART_Transmit(&huart1,(uint8_t*)ptr,len,HAL_MAX_DELAY)!=HAL_OK)
+  if(HAL_UART_Transmit_DMA(&huart1,(uint8_t*)ptr,len)!=HAL_OK)
   {return -1;}
   return len;
 }
