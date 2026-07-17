@@ -29,14 +29,12 @@
 #include "string.h"
 #include "queue.h"
 #include "spi.h"
+#include "stdlib.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-struct serial_print_pack
-{
-  char receive_position[5];
-};
+
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -61,6 +59,8 @@ char receive_position[11]="";
 char num_joint;
 uint8_t counter=0;
 int anti_locked=0;
+int last_posis[6]={0,0,0,0,0,0};
+uint8_t is_first_run[6] = {1, 1, 1, 1, 1, 1};
 /* USER CODE END Variables */
 /* Definitions for defaultTask */
 osThreadId_t defaultTaskHandle;
@@ -197,13 +197,36 @@ void Start_Actuation(void *argument)
         continue;
       }
     }
+
+    int joint_idx = position_pack[0] - '0';
+    int current= 1000*(position_pack[1]-'0') + 100*(position_pack[2]-'0') + 10*(position_pack[3]-'0') + 1*(position_pack[4]-'0');
+
+    if (is_first_run[joint_idx])
+    {
+      last_posis[joint_idx] = current;
+      is_first_run[joint_idx] = 0; // 该关节已完成初始化同步
+      // 第一帧数据只同步基准，不发送，防止开机甩头
+      HAL_GPIO_WritePin(GPIOB,GPIO_PIN_8,GPIO_PIN_SET);
+      osThreadFlagsClear(0x01);
+      continue;
+    }
+
+    // 💡 3. 正确的死区判定逻辑（把阈值设为 2 效果更好）
+    int diff = current - last_posis[joint_idx];
+    if (abs(diff) <= 2) 
+    {
+      // 如果在死区内（波动极小），直接丢弃该帧，并且不更新基准线！
+      HAL_GPIO_WritePin(GPIOB,GPIO_PIN_8,GPIO_PIN_SET);
+      osThreadFlagsClear(0x01);
+      continue;
+    }
     
     memcpy(&command_actuate[3],&position_pack[0],1);
     memcpy(&command_actuate[5], &position_pack[1], 4);
     //*(uint32_t*)&command_actuate[5] = *(uint32_t*)&position_pack[1];
     
     HAL_UART_Transmit(&huart4,(uint8_t*)command_actuate,sizeof(command_actuate),5);
-    num_joint=position_pack[0]; counter++;
+    num_joint=position_pack[0]; counter++; last_posis[joint_idx]=current;
     
     osThreadFlagsSet(FeedBackHandle, 0x02);
     osThreadFlagsClear(0x01);
