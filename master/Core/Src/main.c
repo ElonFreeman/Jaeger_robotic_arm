@@ -135,7 +135,7 @@ int main(void)
       HAL_SPI_Transmit(&hspi3,(uint8_t*)transmit_position,sizeof(transmit_position),HAL_MAX_DELAY);
       HAL_GPIO_WritePin(GPIOB,GPIO_PIN_0,GPIO_PIN_RESET);
 
-      printf("master:%s\r\n",transmit_position);
+      printf("%s\r\n",transmit_position);
     }
     printf("\033[6A");
     
