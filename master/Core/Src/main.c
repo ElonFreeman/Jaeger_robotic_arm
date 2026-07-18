@@ -61,14 +61,16 @@ static void MX_UART4_Init(void);
 static void MX_USART1_UART_Init(void);
 static void MX_SPI3_Init(void);
 /* USER CODE BEGIN PFP */
-void DWT_Delay_Init(void) {
+void DWT_Delay_Init(void)
+{
     CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
     DWT->CYCCNT = 0;
     DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
 }
 
 // 纯硬件微秒延时函数
-void delay_us(uint32_t us) {
+void delay_us(uint32_t us)
+{
     uint32_t startTick = DWT->CYCCNT;
     // 根据主频计算需要的时钟周期数
     uint32_t delayTicks = us * (SystemCoreClock / 1000000); 
