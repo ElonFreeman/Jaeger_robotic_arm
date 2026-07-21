@@ -61,21 +61,23 @@ static void MX_UART4_Init(void);
 static void MX_USART1_UART_Init(void);
 static void MX_SPI3_Init(void);
 /* USER CODE BEGIN PFP */
+
+//初始化DWT的电源和时钟，并启动计数器
 void DWT_Delay_Init(void)
 {
-    CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
-    DWT->CYCCNT = 0;
-    DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
+    CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;  //开启内核跟踪调试组件（TRCENA）的使能
+    DWT->CYCCNT = 0;  //将周期计数器 CYCCNT 清零
+    DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;  //使能 CYCCNT 计数器，使其开始自增
 }
 
 // 纯硬件微秒延时函数
 void delay_us(uint32_t us)
 {
-    uint32_t startTick = DWT->CYCCNT;
+    uint32_t startTick = DWT->CYCCNT;  //CPU周期当前计数值
     // 根据主频计算需要的时钟周期数
-    uint32_t delayTicks = us * (SystemCoreClock / 1000000); 
+    uint32_t delayTicks = us * (SystemCoreClock / 1000000);  //预设延时长度：需要经过的总时钟周期数
 
-    while ((DWT->CYCCNT - startTick) < delayTicks);
+    while ((DWT->CYCCNT - startTick) < delayTicks);  //阻塞等待，直到经过的时钟周期数达到了目标值
 }
 /* USER CODE END PFP */
 

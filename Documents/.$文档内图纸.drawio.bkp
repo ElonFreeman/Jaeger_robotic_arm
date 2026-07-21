@@ -1,0 +1,147 @@
+<mxfile host="Electron" pages="3">
+  <diagram name="系统总体架构" id="CavlCuWWL5FBDWTHHr9f">
+    <mxGraphModel dx="1266" dy="894" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="zofJWi97woi_kHizmbeW-1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="由多个总线舵机组成的主臂" vertex="1">
+          <mxGeometry height="60" width="120" x="390" y="380" as="geometry" />
+        </mxCell>
+        <mxCell id="zofJWi97woi_kHizmbeW-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="主机轮询采样" vertex="1">
+          <mxGeometry height="60" width="120" x="580" y="380" as="geometry" />
+        </mxCell>
+        <mxCell id="zofJWi97woi_kHizmbeW-3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="主机生成指令数据包" vertex="1">
+          <mxGeometry height="60" width="120" x="770" y="380" as="geometry" />
+        </mxCell>
+        <mxCell id="zofJWi97woi_kHizmbeW-4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="从机解析指令数据包" vertex="1">
+          <mxGeometry height="60" width="120" x="960" y="380" as="geometry" />
+        </mxCell>
+        <mxCell id="zofJWi97woi_kHizmbeW-5" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="从机生成作动指令" vertex="1">
+          <mxGeometry height="60" width="120" x="1150" y="380" as="geometry" />
+        </mxCell>
+        <mxCell id="zofJWi97woi_kHizmbeW-6" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="由多个总线舵机组成的从臂" vertex="1">
+          <mxGeometry height="60" width="120" x="1340" y="380" as="geometry" />
+        </mxCell>
+        <mxCell id="zofJWi97woi_kHizmbeW-7" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="510" y="410" as="sourcePoint" />
+            <mxPoint x="580" y="410" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="zofJWi97woi_kHizmbeW-8" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="700" y="409.65999999999997" as="sourcePoint" />
+            <mxPoint x="770" y="409.65999999999997" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="zofJWi97woi_kHizmbeW-9" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="890" y="409.65999999999997" as="sourcePoint" />
+            <mxPoint x="960" y="409.65999999999997" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="zofJWi97woi_kHizmbeW-10" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="1080" y="409.65999999999997" as="sourcePoint" />
+            <mxPoint x="1150" y="409.65999999999997" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="zofJWi97woi_kHizmbeW-11" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="1270" y="409.58000000000004" as="sourcePoint" />
+            <mxPoint x="1340" y="409.58000000000004" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="j_PoLnFksrH799Okoty3" name="传感层架构">
+    <mxGraphModel dx="582" dy="411" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="4EcWqRYGZlTJrEL_maJO-1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="总线舵机" vertex="1">
+          <mxGeometry height="60" width="120" x="239" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="4EcWqRYGZlTJrEL_maJO-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="主机微控制器" vertex="1">
+          <mxGeometry height="60" width="120" x="590" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="4EcWqRYGZlTJrEL_maJO-3" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;entryX=-0.016;entryY=0.337;entryDx=0;entryDy=0;entryPerimeter=0;" target="4EcWqRYGZlTJrEL_maJO-2" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="359" y="340" as="sourcePoint" />
+            <mxPoint x="449" y="340" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4EcWqRYGZlTJrEL_maJO-6" connectable="0" parent="4EcWqRYGZlTJrEL_maJO-3" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="返回位置数据" vertex="1">
+          <mxGeometry relative="1" x="-0.091" as="geometry">
+            <mxPoint x="7" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4EcWqRYGZlTJrEL_maJO-4" edge="1" parent="1" source="4EcWqRYGZlTJrEL_maJO-2" style="endArrow=classic;html=1;rounded=0;exitX=-0.003;exitY=0.668;exitDx=0;exitDy=0;exitPerimeter=0;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="490" y="360" as="sourcePoint" />
+            <mxPoint x="360" y="360" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4EcWqRYGZlTJrEL_maJO-5" connectable="0" parent="4EcWqRYGZlTJrEL_maJO-4" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="发送位置查询指令" vertex="1">
+          <mxGeometry relative="1" x="0.0231" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="kOEdJOMLYHZuMosyWYon" name="传输层架构">
+    <mxGraphModel dx="1456" dy="1028" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="VN_g5o8wLcLT3rDRnVhl-1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="主臂" vertex="1">
+          <mxGeometry height="60" width="120" x="100" y="450" as="geometry" />
+        </mxCell>
+        <mxCell id="VN_g5o8wLcLT3rDRnVhl-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="主机MCU" vertex="1">
+          <mxGeometry height="60" width="120" x="430" y="450" as="geometry" />
+        </mxCell>
+        <mxCell id="VN_g5o8wLcLT3rDRnVhl-3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="从机MCU" vertex="1">
+          <mxGeometry height="60" width="120" x="760" y="450" as="geometry" />
+        </mxCell>
+        <mxCell id="VN_g5o8wLcLT3rDRnVhl-4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="从臂" vertex="1">
+          <mxGeometry height="60" width="120" x="1090" y="450" as="geometry" />
+        </mxCell>
+        <mxCell id="VN_g5o8wLcLT3rDRnVhl-12" edge="1" parent="1" style="endArrow=classic;startArrow=classic;html=1;rounded=0;" target="VN_g5o8wLcLT3rDRnVhl-2" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="220" y="479.5" as="sourcePoint" />
+            <mxPoint x="290" y="479.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="VN_g5o8wLcLT3rDRnVhl-17" connectable="0" parent="VN_g5o8wLcLT3rDRnVhl-12" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="UART协议" vertex="1">
+          <mxGeometry relative="1" x="-0.0413" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="VN_g5o8wLcLT3rDRnVhl-13" edge="1" parent="1" style="endArrow=classic;startArrow=classic;html=1;rounded=0;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="550" y="479.58" as="sourcePoint" />
+            <mxPoint x="760" y="480.08" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="VN_g5o8wLcLT3rDRnVhl-18" connectable="0" parent="VN_g5o8wLcLT3rDRnVhl-13" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="SPI协议" vertex="1">
+          <mxGeometry relative="1" x="-0.0096" y="2" as="geometry">
+            <mxPoint y="2" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="VN_g5o8wLcLT3rDRnVhl-16" edge="1" parent="1" style="endArrow=classic;startArrow=classic;html=1;rounded=0;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="880" y="479.58" as="sourcePoint" />
+            <mxPoint x="1090" y="480.08" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="VN_g5o8wLcLT3rDRnVhl-19" connectable="0" parent="VN_g5o8wLcLT3rDRnVhl-16" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="UART协议" vertex="1">
+          <mxGeometry relative="1" x="0.1254" y="-1" as="geometry">
+            <mxPoint x="-18" y="-1" as="offset" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
