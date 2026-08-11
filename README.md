@@ -24,10 +24,20 @@ Chained task triggering scheduling
 
 Multi-Bus Coordination  Based on High-Speed Memory Block Copy
 
+<img title="" src="./Documents/pics/charts_EN/文档内图纸-high%20speed%20RAM%20copy%201.drawio.png" alt="" width="555" data-align="center">
+
+<img title="" src="./Documents/pics/charts_EN/文档内图纸-high%20speed%20RAM%20copy%202.drawio.png" alt="" width="552" data-align="center">
+
 Initial State Alignment and Dead-Zone Nonlinear Filtering Based on Finite State Machines
 
 Time-Division Multiplexed Joint Position Data Transmission Protocol
 
+<img title="" src="./Documents/pics/charts_EN/文档内图纸-transmition%20protocol%20architecture.drawio.png" alt="" data-align="center" width="704">
+
+<img title="" src="./Documents/pics/charts_EN/文档内图纸-data%20frame%20format.drawio.png" alt="" data-align="center" width="131">
+
 Real-Time Task Performance Analysis Based on GPIO
+
+![](./Documents/pics/charts_EN/文档内图纸-sensor%20layer%20architecture.drawio.png)
 
 Hardware microsecond-level precise delay
