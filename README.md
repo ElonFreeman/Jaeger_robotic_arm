@@ -8,9 +8,9 @@ Adopted a new controlling structure,Master-Slave synchronous control,refer to fi
 
 This robotic arm system have six joint made by BUS servo and Mechanical structure components.
 
-## overall architecture
+## Overall Architecture
 
-<img src="file:///home/fedora/Jaeger_robotic_arm/Documents/pics/charts_EN/文档内图纸-overall%20system%20architechture.drawio.png" title="" alt="" data-align="center">
+<img src="./Documents/pics/charts_EN/文档内图纸-overall%20system%20architechture.drawio.png" title="" alt="图片描述" data-align="center">
 
 ## Key Techonology
 
