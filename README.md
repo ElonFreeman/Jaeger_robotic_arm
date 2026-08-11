@@ -22,6 +22,8 @@ High-priority task scheduling triggered by external hardware interrupts
 
 Chained task triggering scheduling
 
+![](./Documents/pics/charts_EN/文档内图纸-controll%20layer%20architecture.drawio.png)
+
 Multi-Bus Coordination  Based on High-Speed Memory Block Copy
 
 <img title="" src="./Documents/pics/charts_EN/文档内图纸-high%20speed%20RAM%20copy%201.drawio.png" alt="" width="555" data-align="center">
@@ -38,6 +40,24 @@ Time-Division Multiplexed Joint Position Data Transmission Protocol
 
 Real-Time Task Performance Analysis Based on GPIO
 
-![](./Documents/pics/charts_EN/文档内图纸-sensor%20layer%20architecture.drawio.png)
+<img src="./Documents/pics/屏幕截图_20260715_195421.png" title="" alt="" data-align="center">
 
 Hardware microsecond-level precise delay
+
+<img title="" src="./Documents/pics/charts_EN/文档内图纸-microsecond%20precise%20delay.drawio.png" alt="" data-align="center" width="166">
+
+## System Inplementation
+
+### Sensor Layer
+
+
+
+### Transmit Layer
+
+
+
+### Controll Layer
+
+
+
+### Development and Debug
