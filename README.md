@@ -80,5 +80,60 @@ Pin Definitions & Initialization Code Generation: STM32CubeMX 6.18.0
 
 #### Debug
 
-Real-time Task Performance Analysis Using GPIO: 
+Real-time Task Performance Analysis Based on GPIO: 
 To observe and debug the timing of system operations and task scheduling, we used GPIO-based real-time task performance analysis. We set up task scheduling indicator pins for each task: pulling the corresponding pin low when a task starts and restoring it when the task ends. By connecting these indicator pins to a logic analyzer, we can visually see the task scheduling and operation timing on the Pulseview software on a PC, monitor the time consumption of each operation, and also use Pulseview's built-in decoder to analyze signal integrity across different signal paths.
+
+
+
+## Component Introduce
+
+**Bus Servo ** 
+    Zonling Technology ZP25S and ZP25D bus servos  
+
+<img title="" src="./Documents/pics/servo1.png" alt="" width="277" data-align="center">
+
+<img title="" src="./Documents/pics/servo2.png" alt="" width="279" data-align="center">
+
+**Master-Slave MCU  **
+    STM32F407ZGT6 development board  
+
+<img title="" src="./Documents/pics/IMG_0004.JPG" alt="" data-align="center" width="340">
+
+<img title="" src="./Documents/pics/IMG_0005.JPG" alt="" data-align="center" width="348">
+
+**Servo Driver ** 
+    ZLink bus servo driver module
+
+<img title="" src="./Documents/pics/IMG_0007.JPG" alt="" data-align="center" width="508">
+
+**Programmer/debugger  **
+    DAPLink  
+
+<img title="" src="./Documents/pics/IMG_0009.JPG" alt="" data-align="center" width="512">
+
+**Logic Analyzer**  
+    nanoDLA 8-channel  
+
+<img title="" src="./Documents/pics/tb_image_share_1784696362655.png" alt="" data-align="center" width="421">
+
+<img title="" src="./Documents/pics/tb_image_share_1784696374015.png" alt="" data-align="center" width="420">
+
+**DC Regulated Power Supply ** 
+    Maisheng MN-3010F  
+
+<img title="" src="./Documents/pics/tb_image_share_1784696559917.png" alt="" data-align="center" width="217">
+
+**Structural Components  **
+    Aluminum alloy sandblasted sheet metal components,         aluminum alloy CNC servo horns
+
+<img title="" src="./Documents/pics/tb_image_share_1784696590545.png" alt="" data-align="center" width="297">
+
+<img title="" src="./Documents/pics/tb_image_share_1784696593620.png" alt="" data-align="center" width="298">
+
+<img title="" src="./Documents/pics/tb_image_share_1784696635951.png" alt="" data-align="center" width="303">
+
+<img title="" src="./Documents/pics/tb_image_share_1784696638976.png" alt="" data-align="center" width="306">
+
+<img title="" src="./Documents/pics/tb_image_share_1784696655284.png" alt="" data-align="center" width="309">
+
+<img src="./Documents/pics/tb_image_share_1784696662639.png" title="" alt="" data-align="center">
